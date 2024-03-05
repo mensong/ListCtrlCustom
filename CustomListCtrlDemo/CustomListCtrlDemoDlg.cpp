@@ -51,20 +51,21 @@ END_MESSAGE_MAP()
 
 CCustomListCtrlDemoDlg::CCustomListCtrlDemoDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CCustomListCtrlDemoDlg::IDD, pParent)
-	, m_pListCtrl(NULL)
+	//, m_pListCtrl(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
 CCustomListCtrlDemoDlg::~CCustomListCtrlDemoDlg()
 {
-	delete m_pListCtrl;
+	//delete m_pListCtrl;
 }
 
 void CCustomListCtrlDemoDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 
+	DDX_Control(pDX, IDC_LIST1, m_listCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CCustomListCtrlDemoDlg, CDialogEx)
@@ -212,28 +213,36 @@ BOOL CALLBACK OnSettingRect(CListCtrlCustom *pListCtrl, CWnd *pCtrl, CRect &inOu
 
 void CCustomListCtrlDemoDlg::__initListCtrl()
 {
-	//获得ListCtrl的位置
-	CRect rcListCtrl;
-	CWnd *pRect = GetDlgItem(IDC_STATIC_RECT);
-	if (NULL==pRect)
-	{
-		return ;
-	}
-	pRect->GetWindowRect(&rcListCtrl);
-	ScreenToClient(&rcListCtrl);
+	////获得ListCtrl的位置
+	//CRect rcListCtrl;
+	//CWnd *pRect = GetDlgItem(IDC_STATIC_RECT);
+	//if (NULL==pRect)
+	//{
+	//	return ;
+	//}
+	//pRect->GetWindowRect(&rcListCtrl);
+	//ScreenToClient(&rcListCtrl);
 
-	//生成ListCtrl控件
-	m_pListCtrl = new CListCtrlCustom();
-	m_pListCtrl->Create(WS_VISIBLE | WS_BORDER, rcListCtrl, this, IDC_STATIC_RECT+1);
+	////生成ListCtrl控件
+	//m_pListCtrl = new CListCtrlCustom();
+	//m_pListCtrl->Create(WS_VISIBLE | WS_BORDER, rcListCtrl, this, IDC_STATIC_RECT+1);
+	////  扩展样式
+	//DWORD dwExStyle = LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT;
+	//m_pListCtrl->SetExtendedStyle(dwExStyle);
+	//m_pListCtrl->RegOnSettingRect(OnSettingRect);
+	//m_pListCtrl->SetRowHeight(25);
+	//m_pListCtrl->ShowWindow(SW_SHOW);
+	//m_pListCtrl->InsertColumn(0, _T("普通文本"), LVCFMT_CENTER, 100);
+	//m_pListCtrl->InsertColumn(1, _T("控件"), LVCFMT_CENTER, 200);
+
 	//  扩展样式
 	DWORD dwExStyle = LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT;
-	m_pListCtrl->SetExtendedStyle(dwExStyle);
-	m_pListCtrl->RegOnSettingRect(OnSettingRect);
-	m_pListCtrl->SetRowHeight(25);
-	m_pListCtrl->ShowWindow(SW_SHOW);
+	m_listCtrl.SetExtendedStyle(dwExStyle);
+	m_listCtrl.RegOnSettingRect(OnSettingRect);
+	m_listCtrl.SetRowHeight(25);
 
-	m_pListCtrl->InsertColumn(0, _T("普通文本"), LVCFMT_CENTER, 100);
-	m_pListCtrl->InsertColumn(1, _T("控件"), LVCFMT_CENTER, 200);
+	m_listCtrl.InsertColumn(0, _T("普通文本"), LVCFMT_CENTER, 100);
+	m_listCtrl.InsertColumn(1, _T("控件"), LVCFMT_CENTER, 200);
 }
 
 
@@ -244,16 +253,16 @@ void CCustomListCtrlDemoDlg::__initCtrls()
 
 void CCustomListCtrlDemoDlg::OnBnClickedBtnRowButton()
 {
-	int nCurRow = m_pListCtrl->InsertItem(m_pListCtrl->GetItemCount(), _T("按钮"));
+	int nCurRow = m_listCtrl.InsertItem(m_listCtrl.GetItemCount(), _T("按钮"));
 
 	//新建一个按钮
 	//新建的按钮一定是new出来的，并且new出来的对象会自动删除
 	CMyButton *pBtn = new CMyButton();
 	pBtn->Create(_T("Click me"), WS_CHILD | WS_VISIBLE, CRect(0, 0, 80, 20), 
-		this, m_pListCtrl->GetDlgCtrlID()+nCurRow);
+		this, m_listCtrl.GetDlgCtrlID()+nCurRow);
 	pBtn->SetCurRow(nCurRow);
 
-	m_pListCtrl->SetItemEx(nCurRow, 1, pBtn);
+	m_listCtrl.SetItemEx(nCurRow, 1, pBtn);
 
 	//delete pList;//Error. No need to delete it, I will deal with it
 }
@@ -261,13 +270,13 @@ void CCustomListCtrlDemoDlg::OnBnClickedBtnRowButton()
 
 void CCustomListCtrlDemoDlg::OnBnClickedBtnRowCombobox()
 {
-	int nCurRow = m_pListCtrl->InsertItem(m_pListCtrl->GetItemCount(), _T("组合框"));
+	int nCurRow = m_listCtrl.InsertItem(m_listCtrl.GetItemCount(), _T("组合框"));
 
 	//新建一个组合输入框
 	//新建的按钮一定是new出来的，并且new出来的对象会自动删除
 	CComboBox *pCombo = new CComboBox();
-	pCombo->Create(/*CBS_DROPDOWN*/CBS_DROPDOWNLIST | WS_VSCROLL, CRect(0, 0, 80, 20), m_pListCtrl, 
-		m_pListCtrl->GetDlgCtrlID()+nCurRow);
+	pCombo->Create(/*CBS_DROPDOWN*/CBS_DROPDOWNLIST | WS_VSCROLL, CRect(0, 0, 80, 20), &m_listCtrl,
+		m_listCtrl.GetDlgCtrlID()+nCurRow);
 	CString sText;
 	for (int i=0; i<9; ++i)
 	{
@@ -275,7 +284,7 @@ void CCustomListCtrlDemoDlg::OnBnClickedBtnRowCombobox()
 		pCombo->AddString(sText);
 	}
 
-	m_pListCtrl->SetItemEx(nCurRow, 1, pCombo);
+	m_listCtrl.SetItemEx(nCurRow, 1, pCombo);
 
 	//delete pList;//Error. No need to delete it, I will deal with it
 }
@@ -286,17 +295,17 @@ void CCustomListCtrlDemoDlg::OnBnClickedBtnRowListbox()
 	static bool s_bHasSet = false;
 	if (!s_bHasSet)
 	{
-		m_pListCtrl->SetRowHeight(50);
+		m_listCtrl.SetRowHeight(50);
 		s_bHasSet = true;
 	}
 
-	int nCurRow = m_pListCtrl->InsertItem(m_pListCtrl->GetItemCount(), _T("列表"));
+	int nCurRow = m_listCtrl.InsertItem(m_listCtrl.GetItemCount(), _T("列表"));
 
 	//新建一个组合输入框
 	//新建的按钮一定是new出来的，并且new出来的对象会自动删除
 	CListBox *pList = new CListBox();
-	pList->Create(WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_BORDER, CRect(), this, 
-		m_pListCtrl->GetDlgCtrlID()+nCurRow);
+	pList->Create(WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_BORDER, CRect(), &m_listCtrl,
+		m_listCtrl.GetDlgCtrlID()+nCurRow);
 
 	CString sText;
 	for (int i=0; i<9; ++i)
@@ -305,7 +314,7 @@ void CCustomListCtrlDemoDlg::OnBnClickedBtnRowListbox()
 		pList->AddString(sText);
 	}
 
-	m_pListCtrl->SetItemEx(nCurRow, 1, pList);
+	m_listCtrl.SetItemEx(nCurRow, 1, pList);
 
 	//delete pList;//Error. No need to delete it, I will deal with it
 }
@@ -318,23 +327,23 @@ void CCustomListCtrlDemoDlg::OnBnClickedBtnRowDlg()
 	/////////添加的窗口的Style属性一定要为CHILD/////////////
 	////////////////////////////////////////////////////////
 
-	int nCurRow = m_pListCtrl->InsertItem(m_pListCtrl->GetItemCount(), _T("对话框"));
+	int nCurRow = m_listCtrl.InsertItem(m_listCtrl.GetItemCount(), _T("对话框"));
 
 	//新建一个组合输入框
 	//新建的按钮一定是new出来的，并且new出来的对象会自动删除
 	CDlgForListCtrl *pDlg = new CDlgForListCtrl();
-	pDlg->Create(CDlgForListCtrl::IDD, m_pListCtrl);
+	pDlg->Create(CDlgForListCtrl::IDD, &m_listCtrl);
 
 	static bool s_bHasSet = false;
 	if (!s_bHasSet)
 	{
 		CRect rcCtrl;
 		pDlg->GetWindowRect(&rcCtrl);
-		m_pListCtrl->SetRowHeight(rcCtrl.Height());
+		m_listCtrl.SetRowHeight(rcCtrl.Height());
 		s_bHasSet = true;
 	}
 
-	m_pListCtrl->SetItemEx(nCurRow, 1, pDlg);
+	m_listCtrl.SetItemEx(nCurRow, 1, pDlg);
 
 	//delete pList;//Error. No need to delete it, I will deal with it
 }
@@ -342,20 +351,20 @@ void CCustomListCtrlDemoDlg::OnBnClickedBtnRowDlg()
 void CCustomListCtrlDemoDlg::OnBnClickedBtnRadio()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	int nCurRow = m_pListCtrl->InsertItem(m_pListCtrl->GetItemCount(), _T("单选按钮"));
+	int nCurRow = m_listCtrl.InsertItem(m_listCtrl.GetItemCount(), _T("单选按钮"));
 	
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON | BS_NOTIFY | WS_TABSTOP;
 
-	UINT id = m_pListCtrl->GetDlgCtrlID()+nCurRow;
+	UINT id = m_listCtrl.GetDlgCtrlID() + nCurRow;
 	CMyRadioButton::ms_arrGroupButton.insert(id);
 
 	//新建一个按钮
 	//新建的按钮一定是new出来的，并且new出来的对象会自动删除
 	CMyRadioButton *pBtn = new CMyRadioButton();
 	pBtn->Create(_T("Click me"),  dwStyle, CRect(0, 0, 80, 20), 
-		this, m_pListCtrl->GetDlgCtrlID()+nCurRow);
+		this, m_listCtrl.GetDlgCtrlID()+nCurRow);
 	
-	m_pListCtrl->SetItemEx(nCurRow, 1, pBtn);
+	m_listCtrl.SetItemEx(nCurRow, 1, pBtn);
 
 	//delete pList;//Error. No need to delete it, I will deal with it
 }
@@ -365,7 +374,7 @@ void CCustomListCtrlDemoDlg::OnBnClickedBtnGettext()
 	CString sText;
 
 	//获得行
-	int nRow = m_pListCtrl->GetSelectionMark();
+	int nRow = m_listCtrl.GetSelectionMark();
 	if (nRow < 0)
 	{
 		return ;
@@ -373,10 +382,10 @@ void CCustomListCtrlDemoDlg::OnBnClickedBtnGettext()
 	int nCol = 1;//列为固定的
 
 	//处理各种获得值
-	CWnd *pCtrl = m_pListCtrl->GetCtrl(nRow, nCol);
+	CWnd *pCtrl = m_listCtrl.GetCtrl(nRow, nCol);
 	if (NULL == pCtrl)
 	{
-		sText = m_pListCtrl->GetItemText(nCol, nCol);
+		sText = m_listCtrl.GetItemText(nCol, nCol);
 	}
 	else if (pCtrl->IsKindOf(RUNTIME_CLASS(CListBox)))
 	{
@@ -408,19 +417,19 @@ void CCustomListCtrlDemoDlg::OnBnClickedBtnGettext()
 void CCustomListCtrlDemoDlg::OnBnClickedBntDelete()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	int nIndex = m_pListCtrl->GetSelectionMark();
+	int nIndex = m_listCtrl.GetSelectionMark();
 	if (nIndex < 0)
 		return ;
 
 	//获得行
-	int nRow = m_pListCtrl->GetSelectionMark();
+	int nRow = m_listCtrl.GetSelectionMark();
 	if (nRow < 0)
 	{
 		return ;
 	}
 	int nCol = 1;//列为固定的
 
-	CWnd *pCtrl = m_pListCtrl->GetCtrl(nRow, nCol);
+	CWnd *pCtrl = m_listCtrl.GetCtrl(nRow, nCol);
 	if (pCtrl->IsKindOf(RUNTIME_CLASS(CMyRadioButton)))
 	{
 		std::set<UINT>::iterator itFinder = CMyRadioButton::ms_arrGroupButton.find(pCtrl->GetDlgCtrlID());
@@ -428,7 +437,7 @@ void CCustomListCtrlDemoDlg::OnBnClickedBntDelete()
 			CMyRadioButton::ms_arrGroupButton.erase(itFinder);
 	}
 
-	m_pListCtrl->DeleteItem(nIndex);
+	m_listCtrl.DeleteItem(nIndex);
 
 }
 

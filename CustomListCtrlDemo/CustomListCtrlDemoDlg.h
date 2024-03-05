@@ -4,6 +4,7 @@
 
 #pragma once
 #include "afxwin.h"
+#include "ListCtrlCustom.h"
 
 class CListCtrlCustom;
 
@@ -28,8 +29,8 @@ private:
 	void __initCtrls();
 
 private:
-	//ListCtrlCustom
-	CListCtrlCustom *m_pListCtrl;
+	//CListCtrlCustom *m_pListCtrl;
+	CListCtrlCustom m_listCtrl;
 
 // й╣ож
 protected:
@@ -52,4 +53,5 @@ protected:
 public:
 	afx_msg void OnBnClickedBntDelete();
 	afx_msg void OnBnClickedBtnRadio();
+	
 };
