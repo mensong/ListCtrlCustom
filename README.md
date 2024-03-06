@@ -34,4 +34,4 @@ void RegOnSettingRect(LPFUNC_RESIZE_CTRL pfnResizeExCtrl);
 
 ##截图
 
-![alt 截图](img.png)
+![image](img.png)
