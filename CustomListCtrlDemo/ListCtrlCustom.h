@@ -78,6 +78,15 @@ public:
 	 */
 	BOOL SetRowHeight(int nHeight);
 
+	/**
+	 * @brief     	获得当前鼠标下的行列号
+	 * @param       row - 返回行号
+	 * @param       col - 返回列号
+	 * @retval    	TRUE:成功；FALSE: 失败
+	 * @note  
+	*/
+	BOOL GetItemMouseAbove(int& row, int& col);
+
 public:
 	//设置附加控件调整回调函数
 	void RegOnSettingRect(LPFUNC_SETTING_RECT pfnResizeExCtrl)

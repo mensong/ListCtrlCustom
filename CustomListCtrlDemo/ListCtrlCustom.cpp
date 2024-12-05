@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ListCtrlCustom.h"
 
 IMPLEMENT_DYNAMIC(CListCtrlCustom, CListCtrl)
@@ -436,6 +436,27 @@ BOOL CListCtrlCustom::SetRowHeight( int nHeight )
 		ShowWindow(SW_SHOW);
 	}
 
+	return TRUE;
+}
+
+BOOL CListCtrlCustom::GetItemMouseAbove(int& row, int& col)
+{
+	row = -1;
+	col = -1;
+
+	LVHITTESTINFO hitTestInfo;
+	BOOL b = ::GetCursorPos(&hitTestInfo.pt); // 获取当前鼠标位置
+	if (b == FALSE)
+		return FALSE;
+
+	ScreenToClient(&hitTestInfo.pt); // 转换到列表控件的客户区坐标
+	//int rowId = HitTest(&hitTestInfo);
+	int rowId = SubItemHitTest(&hitTestInfo);
+	if (rowId == -1)
+		return FALSE;
+
+	row = hitTestInfo.iItem;
+	col = hitTestInfo.iSubItem;
 	return TRUE;
 }
 
