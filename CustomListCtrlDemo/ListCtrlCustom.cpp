@@ -200,6 +200,7 @@ void CListCtrlCustom::OnTimer(UINT_PTR nIDEvent)
 	{
 		KillTimer(nIDEvent);
 		_updateExCtrlsPos();
+		Invalidate();
 		return;
 	}
 
@@ -271,7 +272,7 @@ void CListCtrlCustom::_updateExCtrlsPos()
 
 			pCtrl->ShowWindow(SW_SHOW);
 			if (NULL==m_pfnResizeExCtrl 
-				|| m_pfnResizeExCtrl(this, pCtrl, rectGrid) == FALSE)
+				|| m_pfnResizeExCtrl(this, pCtrl, rectGrid, nRowMove, nColumn) == FALSE)
 			{//ÌîÂú
 				pCtrl->MoveWindow(&rectGrid);	
 			}

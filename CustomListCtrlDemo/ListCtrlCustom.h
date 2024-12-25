@@ -16,8 +16,8 @@ class CListCtrlCustom;
 
 //控件调整回调函数
 //返回TRUE:表示已经在LPFUNC_SETTING_RECT做了调整处理；
-//返回FALSE:表示根据inOutRcGrid并采用默认的处理方法（填满的方式）
-typedef BOOL (CALLBACK *LPFUNC_SETTING_RECT)(CListCtrlCustom *pListCtrl, CWnd *pCtrl, CRect &inOutRcGrid);
+//返回FALSE:表示采用默认的处理方法（填满的方式）
+typedef BOOL (CALLBACK *LPFUNC_SETTING_RECT)(CListCtrlCustom *pListCtrl, CWnd *pCtrl, const CRect &gridRect, int row, int col);
 
 /** 
  * @class  	SDCtrlComboboxListctrl

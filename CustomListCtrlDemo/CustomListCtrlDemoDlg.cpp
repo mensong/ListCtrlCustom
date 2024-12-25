@@ -169,7 +169,7 @@ HCURSOR CCustomListCtrlDemoDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-BOOL CALLBACK OnSettingRect(CListCtrlCustom *pListCtrl, CWnd *pCtrl, CRect &inOutRcGrid)
+BOOL CALLBACK OnSettingRect(CListCtrlCustom *pListCtrl, CWnd *pCtrl, const CRect &gridRect, int row, int col)
 {
 #if 0
 	//使用默认的处理方式，既填满整个格子
@@ -186,8 +186,8 @@ BOOL CALLBACK OnSettingRect(CListCtrlCustom *pListCtrl, CWnd *pCtrl, CRect &inOu
 		//子控件高度不变，纵向居中，横向填满
 		CRect rcCtrl;
 		pCtrl->GetWindowRect(&rcCtrl);
-		LONG lHeightOffset = (inOutRcGrid.Height()-rcCtrl.Height()) / 2;
-		CRect rcCtrlNew = inOutRcGrid;
+		LONG lHeightOffset = (gridRect.Height()-rcCtrl.Height()) / 2;
+		CRect rcCtrlNew = gridRect;
 		rcCtrlNew.top += lHeightOffset;
 		rcCtrlNew.bottom = rcCtrlNew.top + rcCtrl.Height();
 		pCtrl->MoveWindow(&rcCtrlNew);
@@ -197,9 +197,9 @@ BOOL CALLBACK OnSettingRect(CListCtrlCustom *pListCtrl, CWnd *pCtrl, CRect &inOu
 		//子控件高度和宽度不变，并居中显示
 		CRect rcCtrl;
 		pCtrl->GetWindowRect(&rcCtrl);
-		LONG lWidthOffset = (inOutRcGrid.Width()-rcCtrl.Width()) / 2;
-		LONG lHeightOffset = (inOutRcGrid.Height()-rcCtrl.Height()) / 2;
-		CRect rcCtrlNew = inOutRcGrid;
+		LONG lWidthOffset = (gridRect.Width()-rcCtrl.Width()) / 2;
+		LONG lHeightOffset = (gridRect.Height()-rcCtrl.Height()) / 2;
+		CRect rcCtrlNew = gridRect;
 		rcCtrlNew.top += lHeightOffset;
 		rcCtrlNew.bottom = rcCtrlNew.top + rcCtrl.Height();
 		rcCtrlNew.left += lWidthOffset;
