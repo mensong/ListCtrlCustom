@@ -1,5 +1,6 @@
-#include "stdafx.h"
 #include "ListCtrlCustom.h"
+
+#define UPDATE_LATER_TIMER 1988
 
 IMPLEMENT_DYNAMIC(CListCtrlCustom, CListCtrl)
 
@@ -17,6 +18,7 @@ CListCtrlCustom::~CListCtrlCustom(void)
 BEGIN_MESSAGE_MAP(CListCtrlCustom, CListCtrl)
 	//{{AFX_MSG_MAP(SDCtrlComboboxListctrl)
 	ON_NOTIFY_REFLECT(LVN_ENDSCROLL, &CListCtrlCustom::OnLvnEndScroll)
+	ON_WM_TIMER()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -39,7 +41,8 @@ LRESULT CListCtrlCustom::DefWindowProc( UINT message, WPARAM wParam, LPARAM lPar
 			m_arrExCtrls.InsertAt(nCurRow, pArrColumnCreatedCtrls);//如果此行没有自定义控件的话，则插入一个NULL
 			if (NULL!=pArrColumnCreatedCtrls)
 			{
-				_updateExCtrlsPos();
+				//_updateExCtrlsPos();
+				emitUpdateExCtrlsPos();
 			}
 		}
 		break;
@@ -68,7 +71,8 @@ LRESULT CListCtrlCustom::DefWindowProc( UINT message, WPARAM wParam, LPARAM lPar
 			delete pColInfo;
 			m_arrExCtrls.RemoveAt(nCurRow);
 
-			_updateExCtrlsPos();
+			//_updateExCtrlsPos();
+			emitUpdateExCtrlsPos();
 		}
 		break;
 
@@ -93,7 +97,8 @@ LRESULT CListCtrlCustom::DefWindowProc( UINT message, WPARAM wParam, LPARAM lPar
 				pColInfo->InsertAt(nInsertColumn, (CWnd *)NULL);
 			}
 
-			_updateExCtrlsPos();
+			//_updateExCtrlsPos();
+			emitUpdateExCtrlsPos();
 		}
 		break;
 
@@ -121,8 +126,11 @@ LRESULT CListCtrlCustom::DefWindowProc( UINT message, WPARAM wParam, LPARAM lPar
 				}
 			}
 
-			_updateExCtrlsPos();
+			//_updateExCtrlsPos();
+			emitUpdateExCtrlsPos();
 		}
+		break;
+	case WM_TIMER:
 		break;
 	}
 
@@ -162,8 +170,8 @@ BOOL CListCtrlCustom::OnNotify( WPARAM wParam, LPARAM lParam, LRESULT* pResult )
 		break;
 	case HDN_ENDTRACK:			//拖动列头
 		{
-			_updateExCtrlsPos();
-			RedrawWindow();//防止拖动列（列由大拖到小）的时候，控件不及时刷新
+			//_updateExCtrlsPos();
+			emitUpdateExCtrlsPos();
 		}
 		break;
 	case HDN_DIVIDERDBLCLICK:	//双击列头
@@ -181,8 +189,21 @@ BOOL CListCtrlCustom::OnNotify( WPARAM wParam, LPARAM lParam, LRESULT* pResult )
 void CListCtrlCustom::OnLvnEndScroll( NMHDR *pNMHDR, LRESULT *pResult )
 {
 	LPNMLVSCROLL pStateChanged = reinterpret_cast<LPNMLVSCROLL>(pNMHDR);
-	_updateExCtrlsPos();
+	//_updateExCtrlsPos();
+	emitUpdateExCtrlsPos();
 	*pResult = 0;
+}
+
+void CListCtrlCustom::OnTimer(UINT_PTR nIDEvent)
+{
+	if (nIDEvent == UPDATE_LATER_TIMER)
+	{
+		KillTimer(nIDEvent);
+		_updateExCtrlsPos();
+		return;
+	}
+
+	__super::OnTimer(nIDEvent);
 }
 
 void CListCtrlCustom::_updateExCtrlsPos()
@@ -351,6 +372,12 @@ BOOL CListCtrlCustom::_getGridRect( int nRow, int nCol, CRect &rect )
 	return bRet;
 }
 
+void CListCtrlCustom::emitUpdateExCtrlsPos()
+{
+	this->KillTimer(UPDATE_LATER_TIMER);
+	this->SetTimer(UPDATE_LATER_TIMER, 100, NULL);
+}
+
 CString CListCtrlCustom::GetText( int nRow, int nCol )
 {
 	//如果存在附加控件则返回附加控件的文本，如果没有附加控件则直接返回格子的值
@@ -412,7 +439,8 @@ BOOL CListCtrlCustom::SetItemEx( int nItem, int nSubItem, CWnd *pExCtrl )
 	//设置父窗口为list control
 	pExCtrl->SetParent(this);
 
-	_updateExCtrlsPos();
+	//_updateExCtrlsPos();
+	emitUpdateExCtrlsPos();
 
 	return TRUE;
 }
@@ -426,7 +454,8 @@ BOOL CListCtrlCustom::SetRowHeight( int nHeight )
 		return FALSE;
 	}
 
-	_updateExCtrlsPos();
+	//_updateExCtrlsPos();
+	emitUpdateExCtrlsPos();
 
 	//目的是让滚动条出来（粗糙的方法）
 	//DeleteItem(InsertItem(0, _T("")));

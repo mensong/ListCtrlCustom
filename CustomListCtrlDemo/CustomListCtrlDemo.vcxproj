@@ -196,7 +196,12 @@
     <ClCompile Include="CustomListCtrlDemo.cpp" />
     <ClCompile Include="CustomListCtrlDemoDlg.cpp" />
     <ClCompile Include="DlgForListCtrl.cpp" />
-    <ClCompile Include="ListCtrlCustom.cpp" />
+    <ClCompile Include="ListCtrlCustom.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="MyButton.cpp" />
     <ClCompile Include="MyRadioButton.cpp" />
     <ClCompile Include="stdafx.cpp">

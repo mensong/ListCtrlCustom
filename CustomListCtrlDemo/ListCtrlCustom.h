@@ -102,10 +102,13 @@ protected:
 	//第一列获取的时候，获取到的宽度会是整行的宽度，所以这里需要修正
 	BOOL _getGridRect(int nRow, int nCol, CRect &rect);
 
+	void emitUpdateExCtrlsPos();
+
 protected:
 	virtual LRESULT DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 	afx_msg void OnLvnEndScroll(NMHDR *pNMHDR, LRESULT *pResult);//无论横还是竖的滚动，都会进这个函数
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	DECLARE_MESSAGE_MAP()
 
 protected:
