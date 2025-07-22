@@ -292,9 +292,9 @@ BOOL CListCtrlCustom::Create( _In_ DWORD dwStyle, _In_ const RECT& rect, _In_ CW
 	BOOL bRet = CListCtrl::Create(dwStyle, rect, pParentWnd, nID);
 
 	//强制使用report方式
-	LONG lStyle = GetWindowLong(GetSafeHwnd(), GWL_STYLE);
+	LONG_PTR lStyle = GetWindowLongPtr(GetSafeHwnd(), GWL_STYLE);
 	lStyle |= LVS_REPORT;
-	SetWindowLong(GetSafeHwnd(), GWL_STYLE, lStyle);
+	SetWindowLongPtr(GetSafeHwnd(), GWL_STYLE, lStyle);
 
 	return bRet;
 }
@@ -304,9 +304,9 @@ BOOL CListCtrlCustom::CreateEx( _In_ DWORD dwExStyle, _In_ DWORD dwStyle, _In_ c
 	BOOL bRet = CListCtrl::CreateEx(dwExStyle, dwStyle, rect, pParentWnd, nID);
 
 	//强制使用report方式
-	LONG lStyle = GetWindowLong(GetSafeHwnd(), GWL_STYLE);
+	LONG_PTR lStyle = GetWindowLongPtr(GetSafeHwnd(), GWL_STYLE);
 	lStyle |= LVS_REPORT;
-	SetWindowLong(GetSafeHwnd(), GWL_STYLE, lStyle);
+	SetWindowLongPtr(GetSafeHwnd(), GWL_STYLE, lStyle);
 
 	return bRet;
 }
